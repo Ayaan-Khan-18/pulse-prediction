@@ -49,12 +49,6 @@ pulse-prediction/
 ├── templates/
 │   └── index.html              # Predictive Pulse UI
 ├── app.py                      # Flask backend + /predict API
-├── train_compare.py            # Trains & compares 6 sklearn models
-├── train_pytorch.py            # PyTorch Neural Network training
-├── eda.py                      # Exploratory Data Analysis + plots
-├── predictive_pulse.ipynb      # Google Colab end-to-end notebook
-├── framingham.csv              # Framingham Heart Study dataset
-├── requirements.txt            # Python dependencies
 ├── model.pkl                   # Trained Random Forest model
 ├── scaler.pkl                  # Fitted StandardScaler
 ├── features.pkl                # Ordered feature names
@@ -63,38 +57,6 @@ pulse-prediction/
 
 ---
 
-## ⚙️ Setup & Installation
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/yourusername/pulse-prediction.git
-cd pulse-prediction
-```
-
-### 2. Create virtual environment
-```bash
-python -m venv venv
-source venv/bin/activate        # Linux / Mac
-```
-
-### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Train the model
-```bash
-python train_compare.py
-```
-This trains 6 algorithms on `framingham.csv`, selects the best, and saves `model.pkl`, `scaler.pkl`, `features.pkl`, and `meta.json`.
-
-### 5. Run the app
-```bash
-python app.py
-```
-Open **http://localhost:5000** in your browser.
-
----
 
 ## 🔌 API Reference
 
@@ -155,18 +117,15 @@ Accepts patient clinical parameters and returns the predicted BP stage.
 
 ## 🔬 Training Scripts
 
-### `eda.py` — Exploratory Data Analysis
+### Exploratory Data Analysis
 Generates 4 plots saved to `plots/`:
 - Feature distribution histograms by BP stage
 - Univariate boxplots (age, BMI, cholesterol, glucose, heart rate)
 - Correlation heatmap
 - Bivariate scatter plots (Systolic vs Diastolic, Age vs Systolic)
 
-```bash
-python eda.py
-```
 
-### `train_compare.py` — Multi-Model Comparison
+### Multi-Model Comparison
 - Trains 6 sklearn algorithms with 5-fold cross-validation
 - Generates model comparison bar chart and confusion matrix
 - Saves best model artifacts
@@ -175,15 +134,11 @@ python eda.py
 python train_compare.py
 ```
 
-### `train_pytorch.py` — Neural Network
+### Neural Network
 - Architecture: `Input(14) → 128 → 64 → 32 → 4`
 - BatchNorm + Dropout + Adam optimizer
 - Early stopping with patience=20
 
-```bash
-pip install torch
-python train_pytorch.py
-```
 
 ### `predictive_pulse.ipynb` — Google Colab Notebook
 Full end-to-end pipeline in a single notebook:
@@ -233,10 +188,6 @@ seaborn
 torch
 ```
 
-Install all with:
-```bash
-pip install -r requirements.txt
-```
 
 ---
 
