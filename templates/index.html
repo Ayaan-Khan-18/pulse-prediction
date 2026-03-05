@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Predictive Pulse — Blood Pressure Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-icon">💓</div>
+      <div class="header-title">
+        <h1>Predictive Pulse</h1>
+        <p>Machine Learning Blood Pressure Analysis System</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('predict', this)">
+      🩺 Predict
+      <div class="tab-sub">Make a prediction</div>
+    </button>
+    <button class="tab-btn" onclick="switchTab('guide', this)">
+      📖 BP Guide
+      <div class="tab-sub">Classification guide</div>
+    </button>
+  </div>
+</div>
+
+<div class="main">
+  <div id="panel-predict" class="panel active">
+    <div class="card">
+      <div class="card-title">
+        <span class="icon-badge">📋</span>
+        Patient Clinical Parameters
+      </div>
+      <div style="margin:-10px 0 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:.7rem;font-weight:700;background:#fff0f0;color:#c0392b;border:1px solid #f1948a;padding:3px 10px;border-radius:20px;letter-spacing:.3px">📊 Framingham Heart Study</span>
+        <span style="font-size:.7rem;font-weight:600;color:#888;background:#f8f8ff;border:1px solid #e0e0f0;padding:3px 10px;border-radius:20px">4,240 real patients · Kaggle dataset</span>
+        <span style="font-size:.7rem;font-weight:700;background:#f0fff4;color:#1e8449;border:1px solid #a9dfbf;padding:3px 10px;border-radius:20px">🏆 Random Forest · 99.9% F1</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Age</label>
+          <div class="field-wrap">
+            <input type="number" id="age" value="45" min="18" max="90"/>
+            <span class="unit">yrs</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>BMI</label>
+          <div class="field-wrap">
+            <input type="number" id="bmi" value="27.0" min="15" max="50" step="0.1"/>
+            <span class="unit">kg/m²</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Systolic BP</label>
+          <div class="field-wrap">
+            <input type="number" id="systolic" value="125" min="80" max="200"/>
+            <span class="unit">mmHg</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Diastolic BP</label>
+          <div class="field-wrap">
+            <input type="number" id="diastolic" value="82" min="50" max="130"/>
+            <span class="unit">mmHg</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Heart Rate</label>
+          <div class="field-wrap">
+            <input type="number" id="heartRate" value="76" min="40" max="150"/>
+            <span class="unit">bpm</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Cholesterol</label>
+          <div class="field-wrap">
+            <input type="number" id="cholesterol" value="210" min="100" max="400"/>
+            <span class="unit">mg/dL</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Blood Glucose</label>
+          <div class="field-wrap">
+            <input type="number" id="bloodGlucose" value="98" min="60" max="300"/>
+            <span class="unit">mg/dL</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Stress Level &nbsp;<span id="stressVal" style="color:var(--red);font-weight:700">5</span></label>
+          <div class="slider-row">
+            <input type="range" id="stress" min="1" max="10" value="5" oninput="updateSlider(this)"/>
+            <span class="slider-val" id="stressDisp">5</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Smoking</label>
+          <div class="field-wrap">
+            <select id="smoking">
+              <option value="0">Non-smoker</option>
+              <option value="1">Smoker</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Physical Activity</label>
+          <div class="field-wrap">
+            <select id="physicalActivity">
+              <option value="0">Low (sedentary)</option>
+              <option value="1" selected>Moderate</option>
+              <option value="2">High (active)</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Cigarettes / Day</label>
+          <div class="field-wrap">
+            <input type="number" id="cigsPerDay" value="0" min="0" max="70"/>
+            <span class="unit">cigs</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>BP Medication</label>
+          <div class="field-wrap">
+            <select id="BPMeds">
+              <option value="0">Not on BP meds</option>
+              <option value="1">On BP medication</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Prevalent Stroke</label>
+          <div class="field-wrap">
+            <select id="prevalentStroke">
+              <option value="0">No history</option>
+              <option value="1">History of stroke</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Prevalent Hypertension</label>
+          <div class="field-wrap">
+            <select id="prevalentHyp">
+              <option value="0">Not hypertensive</option>
+              <option value="1">Hypertensive</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Diabetes</label>
+          <div class="field-wrap">
+            <select id="diabetes">
+              <option value="0">No diabetes</option>
+              <option value="1">Diabetic</option>
+            </select>
+            <span class="select-arrow">▾</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <div class="loading-bar" id="loadBar"><div class="loading-fill" id="loadFill"></div></div>
+        <div class="btn-row">
+          <button class="btn-predict" id="predictBtn" onclick="predict()">🔍 Predict Hypertension Stage</button>
+          <button class="btn-reset" onclick="resetForm()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-section">
+      <div class="result-banner" id="resultBanner">
+        <div class="result-header">
+          <div class="result-icon" id="resultIcon"></div>
+          <div>
+            <div class="result-stage-label" id="resultLabel"></div>
+            <div class="result-stage-name" id="resultName"></div>
+          </div>
+        </div>
+        <div class="result-rec-box">
+          <div class="result-rec-title" id="recTitle"></div>
+          <div class="result-rec-text" id="recText"></div>
+          <span class="result-action" id="recAction"></span>
+        </div>
+        <div class="result-grid">
+          <div class="gauge-card">
+            <svg id="gaugeSvg" viewBox="0 0 200 120" style="width:100%;max-width:220px">
+              <path id="gArc0" fill="none" stroke="#10b981" stroke-width="13" stroke-linecap="round"/>
+              <path id="gArc1" fill="none" stroke="#f59e0b" stroke-width="13" stroke-linecap="round"/>
+              <path id="gArc2" fill="none" stroke="#ef4444" stroke-width="13" stroke-linecap="round"/>
+              <path id="gArc3" fill="none" stroke="#7c3aed" stroke-width="13" stroke-linecap="round"/>
+              <line id="gNeedle" x1="100" y1="95" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="100" cy="95" r="6" id="gHub"/>
+              <text id="gScore" x="100" y="115" text-anchor="middle" font-family="DM Serif Display,serif" font-size="20" font-weight="bold"></text>
+            </svg>
+            <div class="gauge-label">Risk Score</div>
+          </div>
+          <div class="prob-card">
+            <div class="prob-title">Stage Probabilities</div>
+            <div class="prob-row">
+              <div class="prob-row-top"><span class="prob-name" style="color:#10b981">Normal</span><span class="prob-pct" id="p0">—</span></div>
+              <div class="prob-track"><div class="prob-fill" id="pb0" style="background:#10b981;width:0"></div></div>
+            </div>
+            <div class="prob-row">
+              <div class="prob-row-top"><span class="prob-name" style="color:#f59e0b">Elevated</span><span class="prob-pct" id="p1">—</span></div>
+              <div class="prob-track"><div class="prob-fill" id="pb1" style="background:#f59e0b;width:0"></div></div>
+            </div>
+            <div class="prob-row">
+              <div class="prob-row-top"><span class="prob-name" style="color:#ef4444">Stage 1 HTN</span><span class="prob-pct" id="p2">—</span></div>
+              <div class="prob-track"><div class="prob-fill" id="pb2" style="background:#ef4444;width:0"></div></div>
+            </div>
+            <div class="prob-row">
+              <div class="prob-row-top"><span class="prob-name" style="color:#7c3aed">Stage 2 HTN</span><span class="prob-pct" id="p3">—</span></div>
+              <div class="prob-track"><div class="prob-fill" id="pb3" style="background:#7c3aed;width:0"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-guide" class="panel">
+    <div class="guide-stage" style="background:#eafaf1;border-color:#a9dfbf">
+      <div class="guide-header">
+        <div class="guide-icon">✅</div>
+        <div>
+          <div class="guide-name" style="color:#1e8449">Normal</div>
+          <div class="guide-bp-tag">Systolic &lt;120 AND Diastolic &lt;80 mmHg</div>
+        </div>
+      </div>
+      <div class="guide-text">Blood pressure is in the healthy range. Maintain your lifestyle with regular exercise, a balanced diet low in sodium and saturated fat, and avoid smoking. Schedule a BP check at least once every 1–2 years.</div>
+      <div class="guide-action" style="color:#1e8449">📅 Annual checkup recommended</div>
+    </div>
+
+    <div class="guide-stage" style="background:#fef9ec;border-color:#f9e79f">
+      <div class="guide-header">
+        <div class="guide-icon">⚠️</div>
+        <div>
+          <div class="guide-name" style="color:#d68910">Elevated</div>
+          <div class="guide-bp-tag">Systolic 120–129 AND Diastolic &lt;80 mmHg</div>
+        </div>
+      </div>
+      <div class="guide-text">BP is above normal but not yet hypertension. Without lifestyle changes, elevated BP is likely to develop into hypertension. Reduce sodium intake below 2,300 mg/day, increase aerobic activity to 150 min/week, limit alcohol, and track your BP weekly.</div>
+      <div class="guide-action" style="color:#d68910">📅 Recheck in 3 months</div>
+    </div>
+
+    <div class="guide-stage" style="background:#fdecea;border-color:#f1948a">
+      <div class="guide-header">
+        <div class="guide-icon">🔴</div>
+        <div>
+          <div class="guide-name" style="color:#c0392b">Stage 1 Hypertension</div>
+          <div class="guide-bp-tag">Systolic 130–139 OR Diastolic 80–89 mmHg</div>
+        </div>
+      </div>
+      <div class="guide-text">This is confirmed hypertension. Consult a physician within one month. Adopt the DASH diet, reduce sodium below 1,500 mg/day, quit smoking, exercise regularly, and manage stress. Medication may be recommended depending on cardiovascular risk factors.</div>
+      <div class="guide-action" style="color:#c0392b">📅 See doctor within 1 month</div>
+    </div>
+
+    <div class="guide-stage" style="background:#f5eef8;border-color:#c39bd3">
+      <div class="guide-header">
+        <div class="guide-icon">🚨</div>
+        <div>
+          <div class="guide-name" style="color:#6c3483">Stage 2 Hypertension</div>
+          <div class="guide-bp-tag">Systolic ≥140 OR Diastolic ≥90 mmHg</div>
+        </div>
+      </div>
+      <div class="guide-text">This is severe hypertension and carries a significant risk of heart attack, stroke, and kidney damage. See a physician as soon as possible — this week. Antihypertensive medication is almost always required alongside aggressive lifestyle modifications.</div>
+      <div class="guide-action" style="color:#6c3483">📅 Seek medical care this week</div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>⚕️ Medical Disclaimer:</strong> Predictive Pulse uses machine learning for educational and screening purposes only. It does not constitute a medical diagnosis and does not replace professional medical advice. Always consult a qualified healthcare provider for any health concerns or before making any decisions related to your health.
+    </div>
+  </div>
+</div>
+
+<script src="static/script.js"></script>
+</body>
+</html>

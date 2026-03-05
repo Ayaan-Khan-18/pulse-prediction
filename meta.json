@@ -1,0 +1,27 @@
+{
+  "dataset": "Framingham Heart Study (real, 4240 patients)",
+  "best_sklearn": "Decision Tree",
+  "sklearn_accuracy": 1.0,
+  "sklearn_f1": 1.0,
+  "sklearn_roc_auc": 1.0,
+  "pytorch_accuracy": 0.9634,
+  "pytorch_f1": 0.9632,
+  "features": [
+    "age",
+    "male",
+    "currentSmoker",
+    "cigsPerDay",
+    "BPMeds",
+    "prevalentStroke",
+    "prevalentHyp",
+    "diabetes",
+    "totChol",
+    "sysBP",
+    "diaBP",
+    "BMI",
+    "heartRate",
+    "glucose"
+  ],
+  "accuracy": 1.0,
+  "f1_score": 1.0
+}
